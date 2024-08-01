@@ -18,7 +18,6 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             my-secret/docker
-            my-secret/ssh
 #        env:
 #          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
 
@@ -57,7 +56,7 @@ jobs:
 
   server_update:
     needs: push_to_registry
-    name: Update server buy ssh
+    name: Update server by ssh
     runs-on: ubuntu-latest
     steps:
       - name: Connect and run script
