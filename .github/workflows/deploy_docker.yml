@@ -17,7 +17,7 @@ jobs:
           url: ${{ vars.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
-            my-secret/docker
+            my-secret/docker DOCKER_PASSWORD
 #        env:
 #          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
 
