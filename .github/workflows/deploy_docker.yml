@@ -59,7 +59,7 @@ jobs:
         with:
           host: ${{ vars.SERVER_IP }}
           port: ${{ vars.SERVER_PORT }}
-          username: ${{ vars.USERNAME }}
+          username: ${{ vars.USER }}
           password: ${{ steps.vault.outputs.SERVER_PASSWORD }}
           script_stop: true
           script: bash ./app/deploy.sh
