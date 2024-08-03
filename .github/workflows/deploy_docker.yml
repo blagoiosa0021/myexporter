@@ -46,6 +46,7 @@ jobs:
     name: Update server by ssh
     runs-on: ubuntu-latest
     steps:
+    
       - name: Get Vault Secrets
         id: vault
         uses: hashicorp/vault-action@v2
