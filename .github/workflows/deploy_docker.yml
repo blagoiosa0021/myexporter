@@ -11,15 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Import Secrets
-        id: import-secrets
+        id: vault
         uses: hashicorp/vault-action@v2
         with:
           url: ${{ vars.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
-          secrets: blagoy-secret/data/docker DOCKER_PASSWORD
+          secrets: blagoy-secret/data/docker
       
       - name: Check out the repo
         uses: actions/checkout@v3
+
+      - name: Use secre
+        run: |
+          echo "My secret is: ${{ steps.vault.outputs.DOCKER_PASSWORD }}"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
