@@ -1,0 +1,69 @@
+name: Build and push Docker image
+on:
+  push:
+    branches: [ "main" ]
+    
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Vault Secrets
+        id: vault
+        uses: hashicorp/vault-action@v2
+        with:
+          url: ${{ vars.VAULT_ADDR }}
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: blagoy-secret/data/docker DOCKER_PASSWORD
+
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ steps.vault.outputs.DOCKER_PASSWORD }}
+          
+#      - name: Extract metadata (tags, labels) for Docker
+#        id: meta
+#        uses: docker/metadata-action@v5
+#        with:
+#          images: ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_NAME }}
+#          tags: latest
+#          labels: latest
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_NAME }}
+#          labels: ${{ steps.meta.outputs.labels }}
+
+          
+  server_update:
+    needs: push_to_registry
+    name: Update server by ssh
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Get Vault Secrets
+        id: vault
+        uses: hashicorp/vault-action@v2
+        with:
+          url: ${{ vars.VAULT_ADDR }}
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: blagoy-secret/data/ssh SERVER_PASSWORD
+          
+      - name: Connect and run script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.SERVER_IP }}
+          port: ${{ vars.SERVER_SSH_PORT }}
+          username: ${{ vars.SERVER_USER }}
+          password: ${{ steps.vault.outputs.SERVER_PASSWORD }}
+          script_stop: true
+          script: bash ./deploy.sh
