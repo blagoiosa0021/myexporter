@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install flask prometheus-client	
 
-CMD ["python" "app.py"]
+CMD ["python", "app.py"]
