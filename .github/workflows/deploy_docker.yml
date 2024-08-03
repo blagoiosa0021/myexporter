@@ -5,25 +5,6 @@ on:
     branches: [ "master" ]
 
 jobs:
-  get-secrets:
-    runs-on: ubuntu-latest
-    name: Get secrets Vault
-    steps:
-    
-      - name: Fetch secret from Vault
-        id: vault
-        uses: hashicorp/vault-action@v2
-        with:
-          url: ${{ vars.VAULT_ADDR }}
-          token: ${{ secrets.VAULT_TOKEN }}
-          secrets: |
-            my-secret/docker DOCKER_PASSWORD
-#        env:
-#          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-
-      - name: Use the secret
-        run: |
-          echo "API Key: ${{ steps.vault.outputs.DOCKER_PASSWORD }}"
   push_to_registry:
 
     name: Push Docker image to Docker Hub
