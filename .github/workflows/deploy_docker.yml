@@ -22,24 +22,27 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ steps.vault.outputs.DOCKER_PASSWORD }}
           
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO_NAME }}
-          tags: latest
-          labels: latest
+#      - name: Extract metadata (tags, labels) for Docker
+#        id: meta
+#        uses: docker/metadata-action@v5
+#        with:
+#          images: ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_NAME }}
+#          tags: latest
+#          labels: latest
           
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_REPO_NAME }}
+#          labels: ${{ steps.meta.outputs.labels }}
+
           
   server_update:
     needs: push_to_registry
