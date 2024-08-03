@@ -23,7 +23,7 @@ jobs:
 
       - name: Use secre
         run: |
-          echo " DEBUG:My secret is: ${{ steps.vault.outputs.DOCKER_PASSWORD }}"
+          echo "DEBUG: My secret is: ${{ steps.vault.outputs.DOCKER_PASSWORD }}"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
