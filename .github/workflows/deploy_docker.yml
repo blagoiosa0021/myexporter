@@ -16,7 +16,7 @@ jobs:
         with:
           url: ${{ vars.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
-          secrets: blagoy-secret/data/docker DOCKER_PASSWORD | DOCKER_PASSWORD
+          secrets: blagoy-secret/data/docker DOCKER_PASSWORD
       
       - name: Check out the repo
         uses: actions/checkout@v3
